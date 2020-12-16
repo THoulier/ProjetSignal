@@ -20,7 +20,7 @@ p4 = R2*exp(-j*teta2);
 zeros = [1 0];
 poles = [1 -p1-p2-p3-p4 p3*p4+(-p1-p2)*(-p3-p4)+p1*p2 p3*p4*(-p1-p2)+p1*p2*(-p3-p4) p1*p2*p3*p4];
 
-N = 5000;
+N = 1000;
 f = -1/2:1/N:1/2-1/N;
 
 m = 0;
@@ -74,15 +74,16 @@ legend('Spectre de puissance AR','DSP AR');
 
 %% Bruit additif
 
-eb_n0_dB = 10;
-eb_n0 = 10^(eb_n0_dB/10);
-Eb = sum(abs(AR_process.^2)); % Energie du filtre 
-N0 = Eb/eb_n0;
 
+RSB = 10;
+Eb = sum(abs(AR_process).^2); % Energie du filtre 
 
+bruit_init = randn(1,N);
+eb_n0 = sum(abs(bruit_init).^2);
+N0 = Eb/(10^(RSB/10)*eb_n0);
 m = 0;
 sigmacarre = 1;
-bruit_additif = sqrt(N0/2)*randn(1,N);
+bruit_additif = sqrt(N0/2)*bruit_init;
 
 AR_bruite = AR_process + bruit_additif;
 
@@ -90,6 +91,9 @@ TF_AR_bruite = fftshift(fft(AR_bruite));
 SP_AR_bruite = (1/N)*abs(TF_AR_bruite).^2;
 
 %% Representation du SP AR et DSP AR
+figure;
+plot(N0);
+
 figure;
 
 plot(f,SP_AR_bruite)
@@ -108,3 +112,8 @@ subplot(2,1,2);
 plot(t,AR_bruite);
 title('Représentation temporelle du AR bruité');
 xlabel('temps');
+
+%% Estimation des ap
+p = 4;
+tab_ap = estimation_ap(AR_process,p);
+
