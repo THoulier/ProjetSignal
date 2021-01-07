@@ -126,7 +126,7 @@ ylabel('Representation temporelle AR bruité');
 p = 4;
 tab_ap = estimation_ap(AR_process,p); %tableau contenant les parametres estimes
 
-%% Parametres alternatifs : paires de raies spectrales
+%% Parametres altern
 
 %% Visualisation des coefficients P(z) et Q(z)
 
@@ -137,5 +137,3 @@ zeros_Qz = [1 a1-a4 a2-a3 a3-a2 a4-a1 1];
 
 figure;
 zplane(zeros_Pz,poles_Pz)
-legend('Racines P(z)','Racines Q(z)');
-title('Racines des polynomes P(z) et Q(z)');
